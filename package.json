@@ -1,0 +1,25 @@
+{
+  "name": "node_file-manager",
+  "version": "1.0.0",
+  "description": "File manager based on NodeJS",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antoniosk10/node_file-manager.git"
+  },
+  "keywords": [
+    "nodejs",
+    "file-manager",
+    "antoniosk10"
+  ],
+  "author": "antoniosk10",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/antoniosk10/node_file-manager/issues"
+  },
+  "homepage": "https://github.com/antoniosk10/node_file-manager#readme"
+}
