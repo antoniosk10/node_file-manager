@@ -1,3 +1,4 @@
+import { ERRORS } from "./errors.js";
 import { readLine } from "./index.js";
 import { currentPath } from "./pathState.js";
 
@@ -21,4 +22,10 @@ export const showCurrentPath = () => {
   console.log(separator);
   console.log(`You are currently in ${currentPath.path}`);
   console.log(separator);
+};
+
+export const getParamFromFlag = (flag) => {
+  const [startFlag, contentFlag] = flag.split("--");
+  if (startFlag !== "") ERRORS.invalidInput();
+  return contentFlag;
 };

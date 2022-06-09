@@ -3,8 +3,9 @@ import { join } from "path";
 import { ERRORS } from "../../errors.js";
 import { currentPath } from "../../pathState.js";
 
-export const add = async (receivedPath) => {
-  if (!receivedPath) ERRORS.invalidInput();
+export const add = async (...params) => {
+  const [receivedPath] = params;
+  if (!receivedPath || params.length > 1) ERRORS.invalidInput();
   const pathToFile = join(currentPath.path, receivedPath);
   try {
     await writeFile(pathToFile, "", { flag: "wx" });
