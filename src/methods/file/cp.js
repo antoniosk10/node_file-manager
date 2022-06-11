@@ -1,8 +1,9 @@
 import { createReadStream, createWriteStream } from "fs";
+import { access } from "fs/promises";
+import path from "path";
 import { pipeline } from "stream/promises";
 import { ERRORS } from "../../errors.js";
 import { getPath } from "./../../utils.js";
-import path from "path";
 
 export const cp = async (...params) => {
   const [pathToFile, pathToNewDirectory] = params;
@@ -10,12 +11,14 @@ export const cp = async (...params) => {
     ERRORS.invalidInput();
   const pathFileCopyFrom = getPath(pathToFile);
   const pathFileCopyTo = getPath(pathToNewDirectory);
-  const readableStream = createReadStream(pathFileCopyFrom);
-  const writableStream = createWriteStream(
-    path.join(pathFileCopyTo, path.basename(pathFileCopyFrom)),
-    { flags: "wx" }
-  );
+
   try {
+    await access(pathFileCopyFrom);
+    const readableStream = createReadStream(pathFileCopyFrom);
+    const writableStream = createWriteStream(
+      path.join(pathFileCopyTo, path.basename(pathFileCopyFrom)),
+      { flags: "wx" }
+    );
     await pipeline(readableStream, writableStream);
   } catch {
     throw ERRORS.operationFailed;
