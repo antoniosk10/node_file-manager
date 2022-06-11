@@ -1,16 +1,23 @@
-import { copyFile } from "fs/promises";
-import { join } from "path";
+import { createReadStream, createWriteStream } from "fs";
+import { pipeline } from "stream/promises";
 import { ERRORS } from "../../errors.js";
-import { currentPath } from "../../pathState.js";
+import { getPath } from "./../../utils.js";
+import path from "path";
 
 export const cp = async (...params) => {
-  const [copyFileFrom, copyFileTo] = params;
-  if (!copyFileFrom || !copyFileTo || params.length > 2) ERRORS.invalidInput();
-  const pathFileCopyFrom = join(currentPath.path, copyFileFrom);
-  const pathFileCopyTo = join(currentPath.path, copyFileTo);
+  const [pathToFile, pathToNewDirectory] = params;
+  if (!pathToFile || !pathToNewDirectory || params.length > 2)
+    ERRORS.invalidInput();
+  const pathFileCopyFrom = getPath(pathToFile);
+  const pathFileCopyTo = getPath(pathToNewDirectory);
+  const readableStream = createReadStream(pathFileCopyFrom);
+  const writableStream = createWriteStream(
+    path.join(pathFileCopyTo, path.basename(pathFileCopyFrom)),
+    { flags: "wx" }
+  );
   try {
-    await copyFile(pathFileCopyFrom, pathFileCopyTo);
+    await pipeline(readableStream, writableStream);
   } catch {
-    ERRORS.operationFailed();
+    throw ERRORS.operationFailed;
   }
 };

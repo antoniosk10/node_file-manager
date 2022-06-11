@@ -32,6 +32,6 @@ const MAP_OF_METHODS = {
 export const execCommand = async (input) => {
   const params = input.trim().split(/\s+/g);
   const command = params.shift();
-  if (!MAP_OF_METHODS[command]) ERRORS.invalidInput();
+  if (!MAP_OF_METHODS[command]) throw ERRORS.invalidInput;
   return await MAP_OF_METHODS[command](...params);
 };

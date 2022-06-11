@@ -1,15 +1,16 @@
 import { access } from "node:fs/promises";
-import path from "path";
 import { ERRORS } from "../../errors.js";
 import { currentPath } from "../../pathState.js";
+import { getPath } from "./../../utils.js";
 
-export const cd = async (receivedPath) => {
-  if (!receivedPath) ERRORS.invalidInput();
+export const cd = async (...params) => {
+  const [receivedPath] = params;
+  if (!receivedPath || params.length > 1) throw ERRORS.invalidInput;
   try {
-    const newPath = path.join(currentPath.path, receivedPath);
+    const newPath = getPath(receivedPath);
     await access(newPath);
     currentPath.path = newPath;
   } catch {
-    ERRORS.operationFailed();
+    throw ERRORS.operationFailed;
   }
 };

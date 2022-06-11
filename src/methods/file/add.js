@@ -1,15 +1,15 @@
-import { writeFile } from "fs/promises";
-import { join } from "path";
+import { createWriteStream } from "fs";
 import { ERRORS } from "../../errors.js";
-import { currentPath } from "../../pathState.js";
+import { getPath } from "./../../utils.js";
 
 export const add = async (...params) => {
   const [receivedPath] = params;
-  if (!receivedPath || params.length > 1) ERRORS.invalidInput();
-  const pathToFile = join(currentPath.path, receivedPath);
-  try {
-    await writeFile(pathToFile, "", { flag: "wx" });
-  } catch {
-    ERRORS.operationFailed();
-  }
+  if (!receivedPath || params.length > 1) throw ERRORS.invalidInput;
+  const pathToFile = getPath(receivedPath);
+
+  return new Promise((resolve, reject) => {
+    const writeStream = createWriteStream(pathToFile, { flags: "wx" });
+    writeStream.on("ready", resolve);
+    writeStream.on("error", () => reject(ERRORS.operationFailed));
+  });
 };

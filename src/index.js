@@ -8,15 +8,12 @@ const username = getUserName(process.argv.slice(2));
 process.stdout.write(`Welcome to the File Manager, ${username}!\n`);
 showCurrentPath();
 
-readLine.on("line", async (input) => {
+readLine.on("line", (input) => {
   if (input === ".exit") exit(username);
   else {
-    try {
-      await execCommand(input);
-      showCurrentPath();
-    } catch (err) {
-      console.log(err.message);
-    }
+    execCommand(input)
+      .then(() => showCurrentPath())
+      .catch((err) => console.log(err.message));
   }
 });
 

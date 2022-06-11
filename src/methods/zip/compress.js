@@ -1,24 +1,31 @@
 import { createReadStream, createWriteStream } from "fs";
-import { join } from "path";
+import path from "path";
 import { pipeline } from "stream/promises";
 import zlib from "zlib";
 import { ERRORS } from "../../errors.js";
-import { currentPath } from "../../pathState.js";
+import { currentPath } from "./../../pathState.js";
+import { getPath } from "./../../utils.js";
 
 export const compress = async (...params) => {
   const [compressFileFrom, compressFileTo] = params;
   if (!compressFileFrom || !compressFileTo || params.length > 2)
-    ERRORS.invalidInput();
+    throw ERRORS.invalidInput;
 
   const zip = zlib.createBrotliCompress();
-  const filePath = join(currentPath.path, compressFileFrom);
-  const archivedFilePath = join(currentPath.path, compressFileTo);
+  const filePath = getPath(compressFileFrom);
+  const archivedFilePath = path.extname(compressFileTo)
+    ? getPath(compressFileTo)
+    : path.join(
+        currentPath.path,
+        compressFileTo,
+        `${path.basename(filePath)}.br`
+      );
   const input = createReadStream(filePath);
-  const output = createWriteStream(archivedFilePath);
+  const output = createWriteStream(archivedFilePath, { flags: "wx" });
 
   try {
     await pipeline(input, zip, output);
   } catch {
-    ERRORS.operationFailed();
+    throw ERRORS.operationFailed;
   }
 };

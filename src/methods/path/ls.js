@@ -7,6 +7,6 @@ export const ls = async () => {
     const files = await readdir(currentPath.path);
     for (const file of files) console.log(file);
   } catch {
-    ERRORS.operationFailed();
+    throw ERRORS.operationFailed;
   }
 };

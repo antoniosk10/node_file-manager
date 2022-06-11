@@ -12,10 +12,10 @@ const AVAILABLE_METHODS = [
 
 export const os = async (...params) => {
   const [flag] = params;
-  if (!flag || params.length > 1) ERRORS.invalidInput();
+  if (!flag || params.length > 1) throw ERRORS.invalidInput;
 
   const methodOS = getParamFromFlag(flag);
-  if (AVAILABLE_METHODS.indexOf(methodOS) === -1) ERRORS.invalidInput();
+  if (AVAILABLE_METHODS.indexOf(methodOS) === -1) throw ERRORS.invalidInput;
 
   switch (methodOS) {
     case "EOL": {

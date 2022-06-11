@@ -1,6 +1,8 @@
 import { ERRORS } from "./errors.js";
 import { readLine } from "./index.js";
 import { currentPath } from "./pathState.js";
+import os from "os";
+import path from "path";
 
 export const getUserName = (params) => {
   const listParams = params[0].split("=");
@@ -26,6 +28,12 @@ export const showCurrentPath = () => {
 
 export const getParamFromFlag = (flag) => {
   const [startFlag, contentFlag] = flag.split("--");
-  if (startFlag !== "") ERRORS.invalidInput();
+  if (startFlag !== "") throw ERRORS.invalidInput;
   return contentFlag;
+};
+
+export const getPath = (receivedPath) => {
+  const normalizePath = path.normalize(receivedPath);
+  if (normalizePath.startsWith(os.homedir())) return normalizePath;
+  return path.join(currentPath.path, receivedPath);
 };
