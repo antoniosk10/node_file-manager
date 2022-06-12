@@ -30,6 +30,14 @@ export const os = async (...params) => {
       console.log(JSON.stringify(osInfo.arch()));
       break;
     }
+    case "cpus": {
+      console.log(
+        osInfo
+          .cpus()
+          .map((el) => ({ model: el.model, speed: `${el.speed / 1000} GHz` }))
+      );
+      break;
+    }
     default: {
       console.log(osInfo[methodOS]());
     }

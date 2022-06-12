@@ -5,7 +5,7 @@ import { exit, getUserName, showCurrentPath } from "./utils.js";
 export const readLine = readline.createInterface(process.stdin, process.stdout);
 
 const username = getUserName(process.argv.slice(2));
-process.stdout.write(`Welcome to the File Manager, ${username}!\n`);
+console.log(`Welcome to the File Manager, ${username}!`);
 showCurrentPath();
 
 readLine.on("line", (input) => {
