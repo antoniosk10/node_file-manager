@@ -9,7 +9,9 @@ export const add = async (...params) => {
 
   return new Promise((resolve, reject) => {
     const writeStream = createWriteStream(pathToFile, { flags: "wx" });
-    writeStream.on("ready", resolve);
+    writeStream.write("");
+    writeStream.on("finish", resolve);
     writeStream.on("error", () => reject(ERRORS.operationFailed));
+    writeStream.end();
   });
 };
